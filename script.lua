@@ -340,6 +340,8 @@ end)
 -- =====================
 
 local screenGui = Instance.new("ScreenGui", player.PlayerGui)
+screenGui.ResetOnSpawn = false
+screenGui.DisplayOrder = 999999
 
 local main = Instance.new("Frame", screenGui)
 main.Size = UDim2.new(0,200,0,360)
@@ -403,7 +405,7 @@ end)
 
 local openButton = Instance.new("TextButton", screenGui)
 openButton.Size = UDim2.new(0,60,0,30)
-openButton.Position = UDim2.new(0.8,0,0.8,0)
+openButton.Position = UDim2.new(0,10,0,10)
 openButton.BackgroundColor3 = Color3.fromRGB(200,50,50)
 openButton.Text = "OPEN"
 openButton.Visible = false
