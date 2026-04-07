@@ -298,6 +298,9 @@ end)
 -- LOOPS
 -- =====================
 
+local currentSpeed = nil
+local currentJump = nil -- NOVO
+
 RunService.RenderStepped:Connect(function()
     updateESP()
 
@@ -321,8 +324,6 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
-local currentSpeed = nil
-
 RunService.RenderStepped:Connect(function()
     if enabled then pullPlayers() end
     if tpEnabled then teleportToPlayers() end
@@ -331,6 +332,15 @@ RunService.RenderStepped:Connect(function()
         local hum = player.Character:FindFirstChildOfClass("Humanoid")
         if hum then
             hum.WalkSpeed = currentSpeed
+        end
+    end
+
+    -- NOVO
+    if currentJump and player.Character then
+        local hum = player.Character:FindFirstChildOfClass("Humanoid")
+        if hum then
+            hum.UseJumpPower = true
+            hum.JumpPower = currentJump
         end
     end
 end)
@@ -396,10 +406,32 @@ speedButton.Size = UDim2.new(1,-20,0,30)
 speedButton.Position = UDim2.new(0,10,0,275)
 speedButton.Text = "SET SPEED"
 
+-- NOVO (sem mexer nos outros)
+local jumpBox = Instance.new("TextBox", main)
+jumpBox.Size = UDim2.new(1,-20,0,30)
+jumpBox.Position = UDim2.new(0,10,0,310)
+jumpBox.PlaceholderText = "Jump (ex: 150)"
+jumpBox.Text = ""
+jumpBox.TextScaled = true
+jumpBox.BackgroundColor3 = Color3.fromRGB(40,40,40)
+jumpBox.TextColor3 = Color3.new(1,1,1)
+
+local jumpButton = Instance.new("TextButton", main)
+jumpButton.Size = UDim2.new(1,-20,0,30)
+jumpButton.Position = UDim2.new(0,10,0,345)
+jumpButton.Text = "SET JUMP"
+
 speedButton.MouseButton1Click:Connect(function()
     local value = tonumber(speedBox.Text)
     if value then
         currentSpeed = value
+    end
+end)
+
+jumpButton.MouseButton1Click:Connect(function()
+    local value = tonumber(jumpBox.Text)
+    if value then
+        currentJump = value
     end
 end)
 
