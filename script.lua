@@ -80,7 +80,22 @@ end
 
 local hue = 0
 
+-- =====================
+-- DISFARCE
+-- =====================
+
+local disguiseEnabled = false
+
 local function updateESP()
+    if disguiseEnabled then
+        for _,v in pairs(espLines) do v.Visible = false end
+        for _,v in pairs(espHealth) do v.Visible = false end
+        for _,v in pairs(espBoxes) do v.Enabled = false end
+        return
+    else
+        for _,v in pairs(espBoxes) do v.Enabled = true end
+    end
+
     hue = (hue + 0.005) % 1
     local color = Color3.fromHSV(hue, 1, 1)
 
@@ -299,7 +314,7 @@ end)
 -- =====================
 
 local currentSpeed = nil
-local currentJump = nil -- NOVO
+local currentJump = nil
 
 RunService.RenderStepped:Connect(function()
     updateESP()
@@ -335,7 +350,6 @@ RunService.RenderStepped:Connect(function()
         end
     end
 
-    -- NOVO
     if currentJump and player.Character then
         local hum = player.Character:FindFirstChildOfClass("Humanoid")
         if hum then
@@ -354,7 +368,7 @@ screenGui.ResetOnSpawn = false
 screenGui.DisplayOrder = 999999
 
 local main = Instance.new("Frame", screenGui)
-main.Size = UDim2.new(0,200,0,360)
+main.Size = UDim2.new(0,200,0,400)
 main.Position = UDim2.new(0.8,0,0.5,0)
 main.BackgroundColor3 = Color3.fromRGB(25,25,25)
 main.Active = true
@@ -406,7 +420,6 @@ speedButton.Size = UDim2.new(1,-20,0,30)
 speedButton.Position = UDim2.new(0,10,0,275)
 speedButton.Text = "SET SPEED"
 
--- NOVO (sem mexer nos outros)
 local jumpBox = Instance.new("TextBox", main)
 jumpBox.Size = UDim2.new(1,-20,0,30)
 jumpBox.Position = UDim2.new(0,10,0,310)
@@ -420,6 +433,12 @@ local jumpButton = Instance.new("TextButton", main)
 jumpButton.Size = UDim2.new(1,-20,0,30)
 jumpButton.Position = UDim2.new(0,10,0,345)
 jumpButton.Text = "SET JUMP"
+
+-- BOTÃO NOVO
+local disguiseButton = Instance.new("TextButton", main)
+disguiseButton.Size = UDim2.new(1,-20,0,30)
+disguiseButton.Position = UDim2.new(0,10,0,380)
+disguiseButton.Text = "DISFARÇAR: OFF"
 
 speedButton.MouseButton1Click:Connect(function()
     local value = tonumber(speedBox.Text)
@@ -454,13 +473,19 @@ end)
 
 aimButton.MouseButton1Click:Connect(function()
     aimLockEnabled = not aimLockEnabled
-    fovCircle.Visible = aimLockEnabled
+    fovCircle.Visible = aimLockEnabled and not disguiseEnabled
     aimButton.Text = aimLockEnabled and "AIM LOCK: ON" or "AIM LOCK: OFF"
 end)
 
 noclipButton.MouseButton1Click:Connect(function()
     noclipEnabled = not noclipEnabled
     noclipButton.Text = noclipEnabled and "NOCLIP: ON" or "NOCLIP: OFF"
+end)
+
+disguiseButton.MouseButton1Click:Connect(function()
+    disguiseEnabled = not disguiseEnabled
+    disguiseButton.Text = disguiseEnabled and "DISFARÇAR: ON" or "DISFARÇAR: OFF"
+    fovCircle.Visible = aimLockEnabled and not disguiseEnabled
 end)
 
 hideButton.MouseButton1Click:Connect(function()
